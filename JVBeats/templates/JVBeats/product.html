@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>Product Details - JV BeatBazaar</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'JVBeats/css/main.css' %}" />
+</head>
+
+<body class="homepage is-preload">
+    <div id="page-wrapper">
+
+        <!-- Header -->
+        <section id="header" class="wrapper" style="background-image: url({% static 'JVBeats/images/pic2.jpg' %})">
+            <div id="logo">
+                <h1><a href="{% url 'home' %}">JV BEATBAZAAR</a></h1>
+                <p>Buy and Sell Beats with Ease</p>
+            </div>
+            <nav id="nav">
+                <ul>
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                    <li><a href="{% url 'cart' %}">Cart</a></li>
+                </ul>
+            </nav>
+        </section>
+
+        <!-- Main Product Content -->
+        <section id="main" class="wrapper style2">
+            <div class="title">{{ beat.title }}</div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 col-12-medium">
+                        <img src="{% static beat.image_url %}" alt="{{ beat.title }}" />
+                    </div>
+                    <div class="col-6 col-12-medium">
+                        <h3>{{ beat.title }}</h3>
+                        <p>Genre: {{ beat.genre }}</p>
+                        <p>Price: ${{ beat.price }}</p>
+                        <audio controls>
+                            <source src="{% static beat.audio_url %}" type="audio/mp3" />
+                        </audio>
+                        <br />
+                        <form method="POST" action="{% url 'add_to_cart' beat.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="button style3">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <section id="footer" class="wrapper">
+            <div class="title">WHO AM I</div>
+            <div class="container">
+                <header class="style1">
+                    <h2>JV CINEPHILE & Co.</h2>
+                    <p>This website is a sub part of JV CINEPHILE. Stay tuned!</p>
+                </header>
+                <div id="copyright">
+                    <ul>
+                        <li>&copy; JV CINEPHILE.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Load JS Files -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.dropotron.min.js' %}"></script>
+    <script src="{% static 'js/browser.min.js' %}"></script>
+    <script src="{% static 'js/breakpoints.min.js' %}"></script>
+    <script src="{% static 'js/util.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+</html>

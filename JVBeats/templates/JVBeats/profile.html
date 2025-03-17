@@ -1,0 +1,136 @@
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Profile Page</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f4;
+          margin: 0;
+          padding: 0;
+        }
+        .profile-container {
+          max-width: 600px;
+          margin: 50px auto;
+          background-color: #fff;
+          padding: 20px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+          text-align: center;
+          margin-bottom: 20px;
+        }
+        .profile-picture {
+          text-align: center;
+          margin-bottom: 20px;
+        }
+        .profile-picture img {
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+        .profile-picture button {
+          display: inline-block;
+          padding: 8px 16px;
+          margin-top: 10px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+        }
+        .profile-picture button:hover {
+          background-color: #0056b3;
+        }
+        .profile-container form {
+          display: flex;
+          flex-direction: column;
+        }
+        .profile-container label {
+          margin-top: 10px;
+        }
+        .profile-container input {
+          padding: 8px;
+          margin-top: 5px;
+          margin-bottom: 20px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          width: 100%;
+        }
+        .profile-container button {
+          padding: 10px 20px;
+          background-color: #28a745;
+          color: white;
+          border: none;
+          cursor: pointer;
+          text-align: center;
+        }
+        .profile-container button:hover {
+          background-color: #218838;
+        }
+        #saveProfileButton {
+          display: none;
+        }
+        #editProfileButton {
+          background-color: #ff9800;
+        }
+        #editProfileButton:hover {
+          background-color: #e68900;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="profile-container">
+        <h2>My Profile</h2>
+        <form id="profileForm" action="/update-profile" method="POST">
+          <div class="profile-picture">
+            <img src="path_to_profile_picture" alt="Profile Picture" id="profilePicture" />
+            <input type="file" id="profileImageUpload" style="display:none" onchange="previewProfilePicture()" />
+            <button type="button" onclick="document.getElementById('profileImageUpload').click()">Change Profile Picture</button>
+          </div>
+          <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="User Name" disabled />
+          </div>
+          <div>
+            <label for="email">Email ID:</label>
+            <input type="email" id="email" name="email" value="user@example.com" disabled />
+          </div>
+          <div>
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" value="1990-01-01" disabled />
+          </div>
+          <button type="button" id="editProfileButton" onclick="toggleEditProfile()">Edit Profile</button>
+          <button type="submit" id="saveProfileButton">Save Changes</button>
+        </form>
+      </div>
+
+      <script>
+        function toggleEditProfile() {
+          const formElements = document.querySelectorAll('#profileForm input')
+          const editButton = document.getElementById('editProfileButton')
+          const saveButton = document.getElementById('saveProfileButton')
+        
+          formElements.forEach((input) => {
+            input.disabled = !input.disabled // Toggle disabled attribute
+          })
+        
+          // Show the Save Changes button immediately after clicking Edit Profile
+          editButton.style.display = 'none'
+          saveButton.style.display = 'inline-block'
+        }
+        
+        function previewProfilePicture() {
+          const file = document.getElementById('profileImageUpload').files[0]
+          const reader = new FileReader()
+        
+          reader.onload = function (e) {
+            document.getElementById('profilePicture').src = e.target.result
+          }
+          reader.readAsDataURL(file)
+        }
+      </script>
+    </body>
+  </html>

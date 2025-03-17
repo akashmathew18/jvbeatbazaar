@@ -1,0 +1,351 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Browse Beats - JV BeatBazaar</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'JVBeats/css/main.css' %}" />
+    <style>
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+      
+      .modal-content {
+        margin: 15% auto;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        width: 80%;
+        text-align: center;
+      }
+      
+      .close-button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      
+      .close-button:hover {
+        background-color: #d32f2f;
+      }
+      
+      /* Beat Card Layout */
+      .beat-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      
+      .beat-card {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        width: 100%; /* Approximately 4 cards per row with spacing */
+        margin: 1%;
+        aspect-ratio: 1; /* Ensures square-shaped cards */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      
+      .beat-card:hover {
+        transform: scale(1.03);
+      }
+      
+      .beat-card img {
+        width: 100%;
+        border-radius: 5px;
+        height: 60%; /* Adjust height proportionally */
+        object-fit: cover; /* Ensure the image doesn't stretch */
+      }
+      
+      .beat-card h3 {
+        font-size: 1.2em;
+        margin: 10px 0;
+        color: #333;
+      }
+      
+      .beat-card p {
+        margin: 5px 0;
+        font-size: 0.9em;
+        color: #666;
+      }
+      
+      .beat-card .button {
+        margin: 10px 0;
+        padding: 0px 15px;
+      }
+      
+      .search-filter-section {
+        margin: 10px 0;
+        padding: 5px;
+        background-color: #f4f4f4;
+        border-radius: 8px;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .search-box,
+      select,
+      .search-button,
+      .filter-button {
+        padding: 5px;
+        font-size: 0.9em;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      
+      .search-box {
+        width: 30%;
+      }
+      
+      .search-button,
+      .filter-button {
+        background-color: #e97770;
+        color: white;
+        cursor: pointer;
+      }
+      
+      .search-button:hover,
+      .filter-button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+
+  <body class="homepage is-preload">
+    <div id="page-wrapper">
+      <!-- Header -->
+      <section id="header" class="wrapper" style="background-image: url({% static 'JVBeats/images/pic2.jpg' %})">
+        <div id="logo">
+          <h1><a href="{% url 'index' %}">JV BEATBAZAAR</a></h1>
+          <p>A platform for musicians and music lovers!</p>
+        </div>
+        <!-- Nav -->
+        <nav id="nav">
+          <ul>
+            <li>
+              <a href="{% url 'beat_list' %}">Home</a>
+            </li>
+  
+            <li>
+              <a href="{% url 'index' %}">Logout</a>
+            </li>
+          </ul>
+        </nav>
+      </section>
+
+      <!-- Intro -->
+      <section id="intro" class="wrapper style1">
+        <div class="title">Browse Our Beats</div>
+        <div class="container">
+          {% if username %}
+            <div class="welcome-message">
+              <p class="style1">Welcome {{ username }} to JV BeatBazaar!</p>
+            </div>
+          {% endif %}
+          <p class="style2">
+            Discover the perfect sound for your next project! <br />Explore our extensive collection of beats from talented producers.
+          </p>
+        </div>
+      </section>
+
+      <!-- Main -->
+      <!-- Main -->
+      <section id="main" class="wrapper style2">
+        <div class="title">Beats</div>
+        <div class="container">
+          <!-- Search and Filter Section -->
+          <div class="search-filter-section">
+            <input type="text" name="search" placeholder="Search beats..." class="search-box" />
+            <select name="genre" id="genre">
+              <option value="">Genre</option>
+              <option value="hiphop">Hip Hop</option>
+              <option value="pop">Pop</option>
+              <option value="rock">Rock</option>
+              <option value="jazz">Jazz</option>
+            </select>
+
+            <select name="category" id="category">
+              <option value="">Category</option>
+              <option value="instrumental">Instrumental</option>
+              <option value="vocal">Vocal</option>
+              <option value="remix">Remix</option>
+            </select>
+
+            <button type="submit" class="search-button">Search</button>
+            <button type="submit" class="filter-button">Apply</button>
+          </div>
+
+          <!-- Displaying Beats or "BEATS NOT FOUND" -->
+          <!-- Displaying Beats or "BEATS NOT FOUND" -->
+          <div class="row" id="beats-list">
+            {% if beats %}
+              <!-- Loop through beats -->
+              {% for beat in beats %}
+                <div class="col-4 col-12-medium">
+                  <section class="beat-card">
+                    <img src="{{ beat.image_file.url }}" alt="{{ beat.title }}" />
+                    <h3>{{ beat.title }}</h3>
+                    <p>
+                      <strong>Genre:</strong> {{ beat.genre }}{% if beat.genre == 'others' and beat.custom_genre %}
+                        ({{ beat.custom_genre }})
+                      {% endif %}
+                    </p>
+                    <p>
+                      <strong>Category:</strong> {{ beat.category }}{% if beat.category == 'others' and beat.custom_category %}
+                        ({{ beat.custom_category }})
+                      {% endif %}
+                    </p>
+                    <p>
+                      <strong>Description:</strong> {{ beat.description }}
+                    </p>
+
+                    <button class="button style3" onclick="openModal('{{ beat.title }}', '{{ beat.audio_file.url }}')">Play Online</button>
+
+                    <a href="{{ beat.audio_file.url }}" download="{{ beat.title }}" class="button style3">Download</a>
+                  </section>
+                </div>
+              {% endfor %}
+            {% else %}
+              <p id="no-beats-message" style="text-align: center; color: red; font-size: 1.5em;">BEATS NOT FOUND</p>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <section id="footer" class="wrapper">
+        <div class="title">WHO AM I</div>
+        <div class="container">
+          <header class="style1">
+            <h2>JV CINEPHILE & Co.</h2>
+            <p>This website is a sub part of JV CINEPHILE. Stay tuned!</p>
+          </header>
+
+          <div class="row">
+            <div class="col-6 col-12-medium">
+              <!-- Contact Form -->
+              <section>
+                <form method="post" action="#">
+                  <div class="row gtr-50">
+                    <div class="col-6 col-12-small">
+                      <input type="text" name="name" id="contact-name" placeholder="Name" />
+                    </div>
+                    <div class="col-6 col-12-small">
+                      <input type="text" name="email" id="contact-email" placeholder="Email" />
+                    </div>
+                    <div class="col-12">
+                      <textarea name="message" id="contact-message" placeholder="Message" rows="6"></textarea>
+                    </div>
+                    <div class="col-12">
+                      <ul class="actions">
+                        <li>
+                          <input type="submit" value="Send Message" class="special" />
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </form>
+              </section>
+            </div>
+
+            <!-- Modal -->
+            <div id="audioModal" class="modal">
+              <div class="modal-content">
+                <h3 id="modalTitle">Playing: Beat Title</h3>
+                <audio id="modalAudio" controls></audio>
+              </div>
+              <button class="close-button" onclick="closeModal()">Close</button>
+            </div>
+
+            <!-- Load JS Files -->
+            <script>
+              function openModal(beatTitle, audioSrc) {
+                const modal = document.getElementById('audioModal')
+                const modalTitle = document.getElementById('modalTitle')
+                const modalAudio = document.getElementById('modalAudio')
+              
+                modalTitle.textContent = `Playing: ${beatTitle}`
+                modalAudio.src = audioSrc
+                modalAudio.play()
+                modal.style.display = 'block'
+              }
+              
+              function closeModal() {
+                const modal = document.getElementById('audioModal')
+                const modalAudio = document.getElementById('modalAudio')
+              
+                modalAudio.pause()
+                modalAudio.currentTime = 0
+                modal.style.display = 'none'
+              }
+              
+              // Function to filter beats based on search, genre, and category
+              function filterBeats() {
+                const searchQuery = document.querySelector('.search-box').value.toLowerCase()
+                const genreFilter = document.querySelector('#genre').value.toLowerCase()
+                const categoryFilter = document.querySelector('#category').value.toLowerCase()
+                const beats = document.querySelectorAll('.beat-card')
+              
+                // If both genre and category are set to "genre" and "category", display all beats
+                if (genreFilter === 'genre' && categoryFilter === 'category') {
+                  beats.forEach((beat) => {
+                    beat.style.display = 'block' // Show all beats
+                  })
+                } else {
+                  beats.forEach((beat) => {
+                    const title = beat.querySelector('h3').textContent.toLowerCase()
+                    const genre = beat.querySelector('p:nth-of-type(1)').textContent.toLowerCase()
+                    const category = beat.querySelector('p:nth-of-type(2)').textContent.toLowerCase()
+              
+                    const matchesSearch = title.includes(searchQuery)
+                    const matchesGenre = genreFilter === '' || genre.includes(genreFilter)
+                    const matchesCategory = categoryFilter === '' || category.includes(categoryFilter)
+              
+                    // Display beats that match all conditions
+                    if (matchesSearch && matchesGenre && matchesCategory) {
+                      beat.style.display = 'block'
+                    } else {
+                      beat.style.display = 'none'
+                    }
+                  })
+                }
+              
+                // Show or hide the "BEAT NOT FOUND!" message based on whether any beats are found
+                const beatsFound = Array.from(beats).some((beat) => beat.style.display !== 'none')
+                const noBeatsMessage = document.getElementById('no-beats-message')
+                if (beatsFound) {
+                  noBeatsMessage.style.display = 'none' // Hide the message if beats are found
+                } else {
+                  noBeatsMessage.style.display = 'block' // Show the message if no beats match
+                }
+              }
+              // Add event listeners to buttons
+              document.querySelector('.search-button').addEventListener('click', filterBeats)
+              document.querySelector('.filter-button').addEventListener('click', filterBeats)
+            </script>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
