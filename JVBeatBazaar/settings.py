@@ -11,7 +11,12 @@ SECRET_KEY = 'django-insecure-!(quguf2tk3lg(h(o8q0rufvmx)7od8_fp0%0a%%r2i0yil(y$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'jvbeatbazaar-a9fzfkbad3habbaj.centralus-01.azurewebsites.net',
+    'your-other-host.com',
+    'localhost',
+    '127.0.0.1',
+]
 
 
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
