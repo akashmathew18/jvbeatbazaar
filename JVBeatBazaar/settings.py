@@ -17,7 +17,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
-ALLOWED_HOSTS = ['*',  "https://jvbeatbazaar-a9fzfkbad3habbaj.centralus-01.azurewebsites.net"]
+ALLOWED_HOSTS = ['*']
 
 
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
