@@ -11,6 +11,12 @@ SECRET_KEY = 'django-insecure-!(quguf2tk3lg(h(o8q0rufvmx)7od8_fp0%0a%%r2i0yil(y$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://jvbeatbazaar-a9fzfkbad3habbaj.centralus-01.azurewebsites.net",
+    "https://your-custom-domain.com",  # Add this if using a custom domain
+]
+
+
 ALLOWED_HOSTS = ['*',  "https://jvbeatbazaar-a9fzfkbad3habbaj.centralus-01.azurewebsites.net"]
 
 
